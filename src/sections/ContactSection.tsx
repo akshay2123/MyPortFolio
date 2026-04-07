@@ -127,43 +127,70 @@ export default function ContactSection() {
   }, []);
 
   const handleSubmit = async (): Promise<void> => {
-    if (!validateForm()) {
+    if (!validateForm()) return;
+
+    if (!SERVICE_ID || !TEMPLATE_YOU_ID || !TEMPLATE_USER_ID || !PUBLIC_KEY) {
+      showToast("Email service not configured properly", "error");
       return;
     }
 
     try {
       setIsSubmitting(true);
 
-      // Send email to you
-      await emailjs.send(
-        SERVICE_ID!,
-        TEMPLATE_YOU_ID!,
-        {
-          to_email: "akshaykale2123@gmail.com",
-          from_email: formData.email,
-          message: formData.message,
-        },
-        PUBLIC_KEY,
-      );
+      let successCount = 0;
 
-      // Send auto-reply to user
-      await emailjs.send(
-        SERVICE_ID!,
-        TEMPLATE_USER_ID!,
-        {
-          to_email: formData.email,
-          reply_message: "Thanks for reaching out! I'll get back to you soon.",
-        },
-        PUBLIC_KEY,
-      );
+      // 1️⃣ Send email to YOU
+      try {
+        await emailjs.send(
+          SERVICE_ID,
+          TEMPLATE_YOU_ID,
+          {
+            to_email: "akshaykale2123@gmail.com",
+            from_email: formData.email,
+            message: formData.message,
+            reply_to: formData.email,
+          },
+          PUBLIC_KEY,
+        );
+        console.log("✅ Sent to YOU");
+        successCount++;
+      } catch (err) {
+        console.error("❌ Failed to send to YOU:", err);
+      }
 
-      showToast("Message sent successfully! 🎉", "success");
-      setFormData({ email: "", message: "" });
-      setErrors({ email: "", message: "" });
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("EmailJS Error:", error);
-      showToast("Failed to send message. Please try again.", "error");
+      // 2️⃣ Send auto-reply to USER
+      try {
+        await emailjs.send(
+          SERVICE_ID,
+          TEMPLATE_USER_ID,
+          {
+            to_email: formData.email,
+            reply_message:
+              "Thanks for reaching out! I'll get back to you soon.",
+          },
+          PUBLIC_KEY,
+        );
+        console.log("✅ Sent to USER");
+        successCount++;
+      } catch (err) {
+        console.error("❌ Failed to send to USER:", err);
+      }
+
+      // 🎯 FINAL RESULT
+      if (successCount === 2) {
+        showToast("Message sent successfully! 🎉", "success");
+      } else if (successCount === 1) {
+        showToast("Partially sent (1 email failed)", "error");
+      } else {
+        showToast("Failed to send message ❌", "error");
+      }
+
+      // Reset form only if at least one success
+      if (successCount > 0) {
+        setFormData({ email: "", message: "" });
+        setErrors({ email: "", message: "" });
+        setIsModalOpen(false);
+      }
     } finally {
       setIsSubmitting(false);
     }
