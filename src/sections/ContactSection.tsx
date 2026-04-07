@@ -10,10 +10,10 @@ import {
 import emailjs from "@emailjs/browser";
 
 // Load environment variables
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_YOU_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_YOU_ID;
-const TEMPLATE_USER_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_USER_ID;
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+const TEMPLATE_YOU_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_YOU_ID;
+const TEMPLATE_USER_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_USER_ID;
+const PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
 
 // Toast Component
 interface ToastProps {
@@ -112,8 +112,10 @@ export default function ContactSection() {
   };
 
   useEffect(() => {
-    // Initialize EmailJS
-    emailjs.init(PUBLIC_KEY!);
+    // Initialize EmailJS if the public key is available
+    if (PUBLIC_KEY) {
+      emailjs.init(PUBLIC_KEY);
+    }
 
     // Log configuration in development
     if (process.env.NODE_ENV === "development") {

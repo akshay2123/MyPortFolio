@@ -1,42 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Code, Briefcase, GraduationCap, Mail, Linkedin, Phone, MapPin, Menu, X } from 'lucide-react';
-import AboutSection from './sections/AboutSection';
-import ContactSection from './sections/ContactSection';
-import EducationSection from './sections/EducationSection';
-import ExperienceSection from './sections/ExperienceSection';
-import ProjectsSection from './sections/ProjectsSection';
-import SkillsSection from './sections/SkillsSection';
-import './App.css';
-import './index.css';
-
+import React, { useState } from "react";
+import { Mail, Linkedin, Phone, MapPin, Menu, X } from "lucide-react";
+import AboutSection from "./sections/AboutSection";
+import ContactSection from "./sections/ContactSection";
+import EducationSection from "./sections/EducationSection";
+import ExperienceSection from "./sections/ExperienceSection";
+import ProjectsSection from "./sections/ProjectsSection";
+import SkillsSection from "./sections/SkillsSection";
+import "./App.css";
+import "./index.css";
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [visibleSections, setVisibleSections] = useState(new Set<string>());
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleSections((prev) => new Set([...prev, entry.target.id]));
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    document.querySelectorAll('section[id]').forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
+    element?.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
   };
-
-  const isVisible = (sectionId: string) => visibleSections.has(sectionId);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
@@ -49,7 +29,14 @@ export default function App() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8">
-            {['about', 'skills', 'experience', 'projects', 'education', 'contact'].map((item, index) => (
+            {[
+              "about",
+              "skills",
+              "experience",
+              "projects",
+              "education",
+              "contact",
+            ].map((item, index) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item)}
@@ -61,7 +48,10 @@ export default function App() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden"
+          >
             {isMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
@@ -69,7 +59,14 @@ export default function App() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 space-y-4 px-4">
-            {['about', 'skills', 'experience', 'projects', 'education', 'contact'].map((item) => (
+            {[
+              "about",
+              "skills",
+              "experience",
+              "projects",
+              "education",
+              "contact",
+            ].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item)}
@@ -88,8 +85,12 @@ export default function App() {
           <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">
             Full-Stack Developer
           </h2>
-          <p className="text-xl md:text-2xl text-slate-300 mb-4">Building scalable web applications with modern technologies</p>
-          <p className="text-lg text-cyan-400 font-semibold mb-8">5+ Years of Experience</p>
+          <p className="text-xl md:text-2xl text-slate-300 mb-4">
+            Building scalable web applications with modern technologies
+          </p>
+          <p className="text-lg text-cyan-400 font-semibold mb-8">
+            5+ Years of Experience
+          </p>
           <div className="flex flex-wrap justify-center gap-4 text-slate-300">
             <div className="flex items-center gap-2">
               <MapPin size={20} className="text-cyan-400" />
@@ -97,7 +98,10 @@ export default function App() {
             </div>
             <div className="flex items-center gap-2">
               <Mail size={20} className="text-cyan-400" />
-              <a href="mailto:akshaykale2123@gmail.com" className="hover:text-cyan-400">
+              <a
+                href="mailto:akshaykale2123@gmail.com"
+                className="hover:text-cyan-400"
+              >
                 akshaykale2123@gmail.com
               </a>
             </div>
