@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Mail,
   Linkedin,
@@ -15,7 +15,6 @@ const TEMPLATE_YOU_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_YOU_ID;
 const TEMPLATE_USER_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_USER_ID;
 const PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
 // const PUBLIC_KEY = "rJhB7DjDPvbN7Za9r";
-
 
 // console.log("PUBLIC_KEY", PUBLIC_KEY);
 
@@ -114,7 +113,6 @@ export default function ContactSection() {
     setErrors(newErrors);
     return isValid;
   };
-
 
   const handleSubmit = async (): Promise<void> => {
     if (!validateForm()) return;
