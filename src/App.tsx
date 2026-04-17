@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Mail, Linkedin, Phone, MapPin, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import AboutSection from "./sections/AboutSection";
 import ContactSection from "./sections/ContactSection";
 import EducationSection from "./sections/EducationSection";
