@@ -14,6 +14,10 @@ const SERVICE_ID = process.env.REACT_APP_EMAILJS_SERVICE_ID;
 const TEMPLATE_YOU_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_YOU_ID;
 const TEMPLATE_USER_ID = process.env.REACT_APP_EMAILJS_TEMPLATE_USER_ID;
 const PUBLIC_KEY = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+// const PUBLIC_KEY = "rJhB7DjDPvbN7Za9r";
+
+
+// console.log("PUBLIC_KEY", PUBLIC_KEY);
 
 // Toast Component
 interface ToastProps {
@@ -111,22 +115,6 @@ export default function ContactSection() {
     return isValid;
   };
 
-  useEffect(() => {
-    // Initialize EmailJS if the public key is available
-    if (PUBLIC_KEY) {
-      emailjs.init(PUBLIC_KEY);
-    }
-
-    // Log configuration in development
-    if (process.env.NODE_ENV === "development") {
-      console.log("EmailJS Configuration:", {
-        SERVICE_ID,
-        TEMPLATE_YOU_ID,
-        TEMPLATE_USER_ID,
-        PUBLIC_KEY,
-      });
-    }
-  }, []);
 
   const handleSubmit = async (): Promise<void> => {
     if (!validateForm()) return;
@@ -141,16 +129,16 @@ export default function ContactSection() {
 
       let successCount = 0;
 
-      // 1️⃣ Send email to YOU
+      // ✅ 1. Send email to YOU
       try {
         await emailjs.send(
           SERVICE_ID,
-          TEMPLATE_YOU_ID,
+          TEMPLATE_USER_ID,
           {
             to_email: "akshaykale2123@gmail.com",
             from_email: formData.email,
             message: formData.message,
-            reply_to: formData.email,
+            // reply_to: formData.email,
           },
           PUBLIC_KEY,
         );
@@ -160,15 +148,13 @@ export default function ContactSection() {
         console.error("❌ Failed to send to YOU:", err);
       }
 
-      // 2️⃣ Send auto-reply to USER
+      // ✅ 2. Send auto-reply to USER (FIXED)
       try {
         await emailjs.send(
           SERVICE_ID,
-          TEMPLATE_USER_ID,
+          TEMPLATE_YOU_ID,
           {
             to_email: formData.email,
-            reply_message:
-              "Thanks for reaching out! I'll get back to you soon.",
           },
           PUBLIC_KEY,
         );
@@ -178,7 +164,7 @@ export default function ContactSection() {
         console.error("❌ Failed to send to USER:", err);
       }
 
-      // 🎯 FINAL RESULT
+      // 🎯 Result
       if (successCount === 2) {
         showToast("Message sent successfully! 🎉", "success");
       } else if (successCount === 1) {
@@ -187,7 +173,6 @@ export default function ContactSection() {
         showToast("Failed to send message ❌", "error");
       }
 
-      // Reset form only if at least one success
       if (successCount > 0) {
         setFormData({ email: "", message: "" });
         setErrors({ email: "", message: "" });
